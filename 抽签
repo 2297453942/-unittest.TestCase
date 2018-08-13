@@ -1,0 +1,7 @@
+# -*- coding: UTF-8 -*-
+import random
+
+me = ['看电影','吃麻辣烫','看书',
+    '跑步','打游戏',]
+
+print(mess[random.randint(0,len(mess) - 1)])
