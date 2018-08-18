@@ -1,0 +1,11 @@
+# -*- coding: UTF-8 -*-
+import pyautogui
+try:
+    while True:
+        #Todo:get and print the mouse coordinates
+        x,y = pyautogui.position()
+        posi= 'x:'+ str(x).rjust(4) +'y:'+ str(y).rjust(4)
+        print(posi,end='')
+        print('\b' *len(posi), end = '', flush=True)
+except KeyboardInterrupt:
+    print('\nDone.')
