@@ -6,4 +6,4 @@ soup = bs4.BeautifulSoup(res.text,'html.parser')
 lin = soup.select('.p-img a')           #提取京东手机链接，p-img元素中<a>元素
 mopen = min(5,len(lin))                #取最小值
 for i in range(mopen):
-    webbrowser.open(lin[i].get('href'))
+    webbrowser.open(lin[i].get('href'))     #打开5个页面返回<a>元素href属性
