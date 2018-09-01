@@ -3,7 +3,7 @@ import requests, webbrowser, bs4
 res = requests.get('https://search.jd.com/Search?keyword=手机&enc=utf-8&wq=')
     
 soup = bs4.BeautifulSoup(res.text,'html.parser')
-lin = soup.select('.p-img a')           #提取京东手机URL
+lin = soup.select('.p-img a')           #提取京东手机链接，查询p-img元素
 mopen = min(5,len(lin))                #取最小值
 for i in range(mopen):
     webbrowser.open(lin[i].get('href'))
