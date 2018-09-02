@@ -1,0 +1,29 @@
+# -*- coding: UTF-8 -*-
+import requests, os, bs4
+url = 'https://xkcd.com'
+os.makedirs('xkcd',exist_ok=True)
+for ikk in range(15):
+    print('下载..' +url)
+    res = requests.get(url)
+    res.raise_for_status()
+    #出错时停止
+    soup = bs4.BeautifulSoup(res.text,'html.parser')
+    comp = soup.select('#comic img')
+    if comp == []:
+        print('没有下载')
+    else:
+        co = 'http:'+comp[0].get('src')
+        print('下载' + (co))
+        #打印下载的是哪个页面
+        res = requests.get(co)
+        res.raise_for_status()
+        img = open(os.path.join('xkcd',os.path.basename(co)),'wb')
+        for chu in res.iter_content(100000):
+            img.write(chu)
+        img.close()
+        
+        #获取下一页
+        prev = soup.select('a[rel="prev"]')[0]
+        url = 'http://xkcd.com' + prev.get('href')
+        
+print('完成')
