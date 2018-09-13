@@ -1,0 +1,42 @@
+# -*- coding: UTF-8 -*-
+import requests, os, bs4,threading
+url = 'https://xkcd.com'
+os.makedirs('xkcd',exist_ok=True)
+#创建文件夹xkcd,exist_ok=True 在该文件存在时，防止出错
+def down(start,end):
+    for ikk in range(start,end):
+        print('下载..' +url)
+        res = requests.get('https://xkcd.com/%s'%(ikk))           #requests.get（）函数下载网页
+        res.raise_for_status()
+        #出错时停止
+        soup = bs4.BeautifulSoup(res.text,'html.parser')
+        #解析网页，'html.parser解析工具
+        comp = soup.select('#comic img')
+        #soup.select()方法查找元素 #为ID属性，这里为查找下载图片的地址返回一个列表
+        if comp == []:
+            print('没有下载')
+        else:
+            co = 'http:'+comp[0].get('src')
+            #get()方法查找'src'属性，这里查找图片地址
+            print('下载' + (co))
+            #打印下载的是哪个页面
+            res = requests.get(co)
+            #requests.get（）函数下载图片，下载的数据必须以二进制写入，然后保存
+            res.raise_for_status()
+            img = open(os.path.join('xkcd',os.path.basename(co)),'wb')
+            #os.path.basename（）以文（）以文件名创建文件，’wb'以二进制写入,
+            for chu in res.iter_content(100000):
+                #iter_content返回一段bytes数据，需要指定多少字节，这里为10000字节
+                img.write(chu)      #write（）写入文件
+            img.close()       #close()关闭文件
+downlies=[]  #追踪创建的下载函数
+for i in range(1,10,1):
+    downlie=threading.Thread(target=down,args=(i,i+1))
+    #调用threading.Thread（）并传入target=down，在新线程调用下载函数
+    #args=(i,i+1)传递给threading.Thread（），第一次迭代中传入的是1和2，以此类推
+    downlies.append(downlie)
+    downlie.start()
+    #.start()创建新线程
+for downlie in downlies:
+    downlie.join()
+print('完成')
